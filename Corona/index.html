@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta charset="utf-8">
+ <title>Covid19 API</title>
+ <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet">
+ <style>
+	body {
+	  background-color: linen;
+	  margin-left: 1%;
+	}
+	
+	h1 {
+	  color: maroon;
+	  font-size: 1.3em;
+	}
+	h1#title
+	{
+		color: red;
+		font-size: 2.5em;
+	}
+	header
+	{
+		text-align: center;
+	}
+	p
+	{
+		background-color: chocolate;
+		width: 30%;
+		color: white;
+		border: solid;
+		border-color: coral;
+		border-radius: 8px;
+		font-family: 'Courier New', Courier, monospace;
+	}
+	</style>
+ </head>
+ <body>
+ <header>
+	 <h1 id="title">Covid19 API</h1>
+ </header>
+ <section>
+ </section>
+
+ <script type="text/javascript">
+ var header = document.querySelector('header');
+ var section = document.querySelector('section');
+
+  //Create request to covid 19 stats api
+
+ var requestURL = 'https://api.covid19api.com/summary';
+ var request = new XMLHttpRequest();
+ request.open('GET', requestURL);
+ request.responseType = 'json';
+
+// send request
+ request.send();
+// On load create html elements
+ request.onload = function()
+ {
+ var Corona_json = request.response;
+ showCorona(Corona_json);
+ }
+
+//Create html elements
+ function showCorona(jsonObj)
+ {
+
+
+ //Global data in headers
+ var myArticle = document.createElement('article');
+ var myPara1 = document.createElement('h1');
+ var myPara2 = document.createElement('h1');
+ var myPara3 = document.createElement('h1');
+ var date = document.createElement('h1');
+ 
+ myPara1.textContent = 'Total Covid 19 cases: '+jsonObj.Global.TotalConfirmed;
+ myPara2.textContent = 'Total death from Covid 19: '+jsonObj.Global.TotalDeaths;
+ myPara3.textContent = 'Total recovered from Covid 19: '+jsonObj.Global.TotalRecovered;
+ date.textContent = 'Stats on: '+jsonObj.Date.slice(0,-1).replace('T',' ');
+
+ myArticle.appendChild(date);
+ myArticle.appendChild(myPara1);
+ myArticle.appendChild(myPara2);
+ myArticle.appendChild(myPara3); 
+
+
+// Countries where total cases are more than 500k in normal strings
+ var i=0;
+ do{
+ 	if(jsonObj.Countries[i].TotalConfirmed >500000){
+		var myPara4 = document.createElement('p');
+			myPara4.textContent = 'Total Corona cases in '+jsonObj.Countries[i].Country+': '+jsonObj.Countries[i].TotalConfirmed;
+			myArticle.appendChild(myPara4);
+	}
+i++;
+
+ }
+ //Until countries are over
+ while(jsonObj.Countries[i].Country != "Zambia")
+
+ section.appendChild(myArticle);
+ }
+ </script>
+ </body>
+ </html>
